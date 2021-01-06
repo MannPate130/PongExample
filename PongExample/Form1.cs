@@ -28,8 +28,8 @@ namespace PongExample
 
         int ballX = 295;
         int ballY = 195;
-        int ballXSpeed = 3;
-        int ballYSpeed = -3;
+        int ballXSpeed = 7;
+        int ballYSpeed = -7;
         int ballWidth = 10;
         int ballHeight = 10;
 
@@ -179,27 +179,43 @@ namespace PongExample
             {
                 ballXSpeed *= -1;
                 ballX = paddle1X + paddleWidth + 1;
+                playerTurn = 2;
             }
             else if (playerTurn == 2 && player2Rec.IntersectsWith(ballRec))
             {
                 ballXSpeed *= -1;
                 ballX = paddle2X + ballWidth + 1;
-            }
+                playerTurn = 1;
+            }   
 
             if (ballX < 0)
             {
-                playerTurn = 2;
-                player2Score++;
-                ballX = 295;
-                ballY = 195;
+               if (playerTurn == 1)
+               {
+                    playerTurn = 2;
+                    player2Score++;
+                    ballX = 295;
+                    ballY = 195;
 
-                paddle1Y = 165;
-                paddle2Y = 270;
+                    paddle1Y = 165;
+                    paddle2Y = 270;
+               }
+               else
+               {
+                    player1Score++;
+                    ballX = 295;
+                    ballY = 195;
+
+                    paddle1Y = 165;
+                    paddle2Y = 270;
+               }
+              
             }
             else if (ballX > 700)
             {
                 ballXSpeed *= -1;
             }
+        
 
             if (player1Score == 3 || player2Score == 3)
             {
