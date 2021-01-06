@@ -28,8 +28,8 @@ namespace PongExample
 
         int ballX = 295;
         int ballY = 195;
-        int ballXSpeed = 9;
-        int ballYSpeed = -9;
+        int ballXSpeed = 3;
+        int ballYSpeed = -3;
         int ballWidth = 10;
         int ballHeight = 10;
 
@@ -115,7 +115,7 @@ namespace PongExample
         {
             //move ball
             ballX -= ballXSpeed;
-            ballY -= ballYSpeed;
+            ballY += ballYSpeed;
 
             //move player 1
             if (wDown == true && paddle1Y > 0)
@@ -175,12 +175,12 @@ namespace PongExample
 
             //check if ball hits either paddle. If it does change the direction
             //and place the ball in front of the paddle hit
-            if (player1Rec.IntersectsWith(ballRec))
+            if (playerTurn == 1 && player1Rec.IntersectsWith(ballRec))
             {
                 ballXSpeed *= -1;
                 ballX = paddle1X + paddleWidth + 1;
             }
-            else if (player2Rec.IntersectsWith(ballRec))
+            else if (playerTurn == 2 && player2Rec.IntersectsWith(ballRec))
             {
                 ballXSpeed *= -1;
                 ballX = paddle2X + ballWidth + 1;
@@ -188,6 +188,7 @@ namespace PongExample
 
             if (ballX < 0)
             {
+                playerTurn = 2;
                 player2Score++;
                 ballX = 295;
                 ballY = 195;
@@ -220,9 +221,14 @@ namespace PongExample
             e.Graphics.DrawString($"{player1Score}", screenFont, whiteBrush, 280, 10);
             e.Graphics.DrawString($"{player2Score}", screenFont, whiteBrush, 310, 10);
 
-
-            e.Graphics.DrawRectangle(borderPen, paddle1X, paddle1Y, paddleWidth, paddleHeight);
-            e.Graphics.DrawRectangle(borderPen, paddle2X, paddle2Y, paddleWidth, paddleHeight);
+            if (playerTurn == 1)
+            {
+                e.Graphics.DrawRectangle(borderPen, paddle1X, paddle1Y, paddleWidth, paddleHeight);
+            }
+            else
+            {
+                e.Graphics.DrawRectangle(borderPen, paddle2X, paddle2Y, paddleWidth, paddleHeight);
+            }
 
         }
     }
