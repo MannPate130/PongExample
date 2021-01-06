@@ -13,21 +13,23 @@ namespace PongExample
     public partial class Form1 : Form
     {
         int paddle1X = 10;
-        int paddle1Y = 170;
+        int paddle1Y = 165;
         int player1Score = 0;
 
-        int paddle2X = 580;
-        int paddle2Y = 170;
+        int paddle2X = 10;
+        int paddle2Y = 270;
         int player2Score = 0;
+
+        int playerTurn = 1;
 
         int paddleWidth = 10;
         int paddleHeight = 60;
-        int paddleSpeed = 4;
+        int paddleSpeed = 8;
 
         int ballX = 295;
         int ballY = 195;
-        int ballXSpeed = 6;
-        int ballYSpeed = -6;
+        int ballXSpeed = 9;
+        int ballYSpeed = -9;
         int ballWidth = 10;
         int ballHeight = 10;
 
@@ -36,10 +38,15 @@ namespace PongExample
         bool upArrowDown = false;
         bool downArrowDown = false;
 
+        bool aDown = false;
+        bool dDown = false;
+        bool leftDown = false;
+        bool rightDown = false;
+
         SolidBrush blueBrush = new SolidBrush(Color.DodgerBlue);
         SolidBrush whiteBrush = new SolidBrush(Color.White);
         Font screenFont = new Font("Consolas", 12);
-
+        Pen borderPen = new Pen(Color.White);
 
         public Form1()
         {
@@ -62,6 +69,15 @@ namespace PongExample
                 case Keys.Down:
                     downArrowDown = true;
                     break;
+                case Keys.A:
+                    aDown = true; break;
+                case Keys.D:
+                    dDown = true; break;
+                case Keys.Left:
+                    leftDown = true; break;
+                case Keys.Right:
+                    rightDown = true; break;
+
             }
 
         }
@@ -82,6 +98,15 @@ namespace PongExample
                 case Keys.Down:
                     downArrowDown = false;
                     break;
+                case Keys.A:
+                    aDown = false; break;
+                case Keys.D:
+                    dDown = false; break;
+                case Keys.Left:
+                    leftDown = false; break;
+                case Keys.Right:
+                    rightDown = false; break;
+
             }
 
         }
@@ -89,8 +114,8 @@ namespace PongExample
         private void gameTimer_Tick(object sender, EventArgs e)
         {
             //move ball
-            ballX += ballXSpeed;
-            ballY += ballYSpeed;
+            ballX -= ballXSpeed;
+            ballY -= ballYSpeed;
 
             //move player 1
             if (wDown == true && paddle1Y > 0)
@@ -114,11 +139,34 @@ namespace PongExample
                 paddle2Y += paddleSpeed;
             }
 
+            //move player 1 left and right
+            if (aDown == true && paddle1X > 0)
+            {
+                paddle1X -= paddleSpeed;
+            }
+
+            if (dDown == true && paddle1X < this.Width - paddleWidth)
+            {
+                paddle1X += paddleSpeed;
+            }
+
+            //move player 2 left and right 
+            if (leftDown == true && paddle2X > 0)
+            {
+                paddle2X -= paddleSpeed;
+            }
+
+            if (rightDown == true && paddle2X < this.Width - paddleWidth)
+            {
+                paddle2X += paddleSpeed;
+            }
+
             //top and bottom wall collision
-            if (ballY < 0 || ballY > this.Height - ballHeight)
+                if (ballY < 0 || ballY > this.Height - ballHeight)
             {
                 ballYSpeed *= -1;  // or: ballYSpeed = -ballYSpeed;
             }
+
 
             //create Rectangles of objects on screen to be used for collision detection
             Rectangle player1Rec = new Rectangle(paddle1X, paddle1Y, paddleWidth, paddleHeight);
@@ -135,7 +183,7 @@ namespace PongExample
             else if (player2Rec.IntersectsWith(ballRec))
             {
                 ballXSpeed *= -1;
-                ballX = paddle2X - ballWidth - 1;
+                ballX = paddle2X + ballWidth + 1;
             }
 
             if (ballX < 0)
@@ -144,18 +192,12 @@ namespace PongExample
                 ballX = 295;
                 ballY = 195;
 
-                paddle1Y = 170;
-                paddle2Y = 170;
+                paddle1Y = 165;
+                paddle2Y = 270;
             }
-            else if (ballX > 600)
+            else if (ballX > 700)
             {
-                player1Score++;
-
-                ballX = 295;
-                ballY = 195;
-
-                paddle1Y = 170;
-                paddle2Y = 170;
+                ballXSpeed *= -1;
             }
 
             if (player1Score == 3 || player2Score == 3)
@@ -177,6 +219,10 @@ namespace PongExample
 
             e.Graphics.DrawString($"{player1Score}", screenFont, whiteBrush, 280, 10);
             e.Graphics.DrawString($"{player2Score}", screenFont, whiteBrush, 310, 10);
+
+
+            e.Graphics.DrawRectangle(borderPen, paddle1X, paddle1Y, paddleWidth, paddleHeight);
+            e.Graphics.DrawRectangle(borderPen, paddle2X, paddle2Y, paddleWidth, paddleHeight);
 
         }
     }
