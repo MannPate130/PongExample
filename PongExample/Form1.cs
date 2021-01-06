@@ -162,7 +162,7 @@ namespace PongExample
             }
 
             //top and bottom wall collision
-                if (ballY < 0 || ballY > this.Height - ballHeight)
+            if (ballY < 0 || ballY > this.Height - ballHeight)
             {
                 ballYSpeed *= -1;  // or: ballYSpeed = -ballYSpeed;
             }
@@ -186,36 +186,35 @@ namespace PongExample
                 ballXSpeed *= -1;
                 ballX = paddle2X + ballWidth + 1;
                 playerTurn = 1;
-            }   
+            }
 
             if (ballX < 0)
             {
-               if (playerTurn == 1)
-               {
+                ballX = 295;
+                ballY = 195;
+
+                paddle1Y = 165;
+                paddle2Y = 270;
+
+                if (playerTurn == 1)
+                {
                     playerTurn = 2;
                     player2Score++;
-                    ballX = 295;
-                    ballY = 195;
 
-                    paddle1Y = 165;
-                    paddle2Y = 270;
-               }
-               else
-               {
+                }
+                else
+                {
+                    playerTurn = 1;
                     player1Score++;
-                    ballX = 295;
-                    ballY = 195;
 
-                    paddle1Y = 165;
-                    paddle2Y = 270;
-               }
-              
+                }
+
             }
             else if (ballX > 700)
             {
                 ballXSpeed *= -1;
             }
-        
+
 
             if (player1Score == 3 || player2Score == 3)
             {
@@ -232,7 +231,7 @@ namespace PongExample
 
             e.Graphics.FillRectangle(blueBrush, paddle1X, paddle1Y, paddleWidth, paddleHeight);
             e.Graphics.FillRectangle(blueBrush, paddle2X, paddle2Y, paddleWidth, paddleHeight);
-            
+
 
             e.Graphics.DrawString($"{player1Score}", screenFont, whiteBrush, 280, 10);
             e.Graphics.DrawString($"{player2Score}", screenFont, whiteBrush, 310, 10);
